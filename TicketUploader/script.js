@@ -113,7 +113,7 @@ async function uploadFile(file, fileName) {
     form.append('file', file);
 
     try {
-        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', {
             method: 'POST',
             headers: new Headers({'Authorization': 'Bearer ' + gapi.client.getToken().access_token}),
             body: form,
@@ -129,6 +129,6 @@ async function uploadFile(file, fileName) {
     } catch (error) {
         status.textContent = 'Error en subida: ' + error.message;
     }
-
 }
+
 
