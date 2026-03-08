@@ -1,0 +1,171 @@
+/* Fondo general más oscuro y elegante */
+body {
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a); /* Degradado oscuro azul-gris */
+    color: #e2e8f0; /* Texto claro para contraste */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Contenedor principal con glassmorphism + neumorphism oscuro */
+.container {
+    background: rgba(30, 41, 59, 0.25); /* Semi-transparente oscuro */
+    backdrop-filter: blur(16px);        /* Efecto vidrio esmerilado */
+    -webkit-backdrop-filter: blur(16px); /* Soporte Safari */
+    border-radius: 24px;
+    padding: 40px 30px;
+    max-width: 520px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 
+        8px 8px 24px rgba(0, 0, 0, 0.6),     /* Sombra oscura profunda */
+        -8px -8px 24px rgba(60, 70, 90, 0.3); /* Sombra clara suave (neumo oscuro) */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    animation: fadeInUp 1.2s ease-out forwards;
+}
+
+/* Animación de entrada más suave y elevada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+h1 {
+    font-size: 2.1em;
+    margin-bottom: 12px;
+    color: #f1f5f9;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    letter-spacing: -0.5px;
+}
+
+p {
+    font-size: 1.05em;
+    margin-bottom: 32px;
+    color: #cbd5e1;
+    opacity: 0.9;
+}
+
+/* Área de upload con neumorphism */
+.upload-area {
+    position: relative;
+    margin-bottom: 28px;
+}
+
+#fileInput {
+    display: none;
+}
+
+.upload-button {
+    background: rgba(30, 41, 59, 0.4);
+    color: #e2e8f0;
+    padding: 16px 36px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 1.15em;
+    font-weight: 600;
+    transition: all 0.35s ease;
+    display: inline-block;
+    box-shadow: 
+        6px 6px 16px rgba(0, 0, 0, 0.5),
+        -6px -6px 16px rgba(60, 70, 90, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.upload-button:hover {
+    background: rgba(45, 60, 85, 0.55);
+    transform: translateY(-3px);
+    box-shadow: 
+        10px 10px 24px rgba(0, 0, 0, 0.6),
+        -10px -10px 24px rgba(80, 90, 110, 0.3);
+}
+
+/* Efecto "presionado" al click */
+.upload-button:active,
+.submit-button:active {
+    transform: translateY(2px) scale(0.97);
+    box-shadow: 
+        inset 4px 4px 12px rgba(0, 0, 0, 0.6),
+        inset -4px -4px 12px rgba(60, 70, 90, 0.2);
+}
+
+/* Imagen preview: centrada, contenida, sin desbordar */
+.preview-img {
+    max-width: 100%;
+    max-height: 280px;          /* Límite razonable para móviles y desktop */
+    margin: 24px auto 0;
+    border-radius: 16px;
+    display: none;
+    box-shadow: 
+        6px 6px 20px rgba(0, 0, 0, 0.5),
+        -6px -6px 20px rgba(60, 70, 90, 0.25);
+    object-fit: contain;        /* Mantiene proporciones sin distorsión */
+    object-position: center;    /* Centrada */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.4s ease;
+    animation: zoomInFade 0.7s ease-out forwards;
+}
+
+@keyframes zoomInFade {
+    from {
+        opacity: 0;
+        transform: scale(0.85) translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Botón de subir con neumorphism */
+.submit-button {
+    background: linear-gradient(145deg, #1e293b, #334155);
+    color: #f1f5f9;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 1.18em;
+    font-weight: 600;
+    transition: all 0.35s ease;
+    margin-top: 24px;
+    box-shadow: 
+        8px 8px 20px rgba(0, 0, 0, 0.55),
+        -8px -8px 20px rgba(60, 70, 90, 0.28);
+}
+
+.submit-button:hover {
+    background: linear-gradient(145deg, #334155, #475569);
+    transform: translateY(-3px);
+    box-shadow: 
+        12px 12px 28px rgba(0, 0, 0, 0.65),
+        -12px -12px 28px rgba(80, 90, 110, 0.35);
+}
+
+.status-message {
+    margin-top: 28px;
+    font-size: 1.05em;
+    color: #facc15; /* Amarillo cálido para resaltar */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    min-height: 1.4em;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        padding: 28px 20px;
+        border-radius: 20px;
+    }
+    
+    h1 { font-size: 1.9em; }
+    .preview-img { max-height: 220px; }
+}

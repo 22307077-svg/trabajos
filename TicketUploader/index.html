@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploader de Tickets - Control de Evidencias</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Librería de Google API (para autenticación y Drive) -->
+    <script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Uploader de Tickets de Compras</h1>
+        <p>Sube una foto de tu ticket para almacenarla en Google Drive con fecha y hora exactas.</p>
+        
+        <div class="upload-area">
+            <input type="file" id="fileInput" accept="image/*" />
+            <label for="fileInput" class="upload-button">Seleccionar Foto</label>
+            <img id="preview" src="" alt="Vista previa" class="preview-img" />
+        </div>
+        
+        <button id="uploadButton" class="submit-button">Subir a Google Drive</button>
+        
+        <div id="status" class="status-message"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
