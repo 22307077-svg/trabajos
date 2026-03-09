@@ -4,8 +4,6 @@ const API_KEY = 'AIzaSyANr0IcvAguJcyhRzc2lPaU2wTTxZ8WXBs'; // Reemplaza con tu A
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Solo para subir archivos
 
-const CARPETA_ID = '1u3ml9eHm3sxDK4WENP6E8bL8eZyqi5q6';
-
 
 let tokenClient;
 let gapiInited = false;
@@ -74,7 +72,7 @@ fileInput.addEventListener('change', (e) => {
 uploadButton.addEventListener('click', () => {
     const file = fileInput.files[0];
     if (!file) {
-        status.textContent = 'Selecciona una imagen primero.';
+        status.textContent = 'Selecciona o toma una foto primero.';
         return;
     }
 
@@ -113,14 +111,14 @@ async function uploadFile(file, fileName) {
     form.append('file', file);
 
     try {
-        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', {
+        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
             method: 'POST',
             headers: new Headers({'Authorization': 'Bearer ' + gapi.client.getToken().access_token}),
             body: form,
         });
         const result = await response.json();
         if (result.id) {
-            status.textContent = '¡Subido exitosamente! ID del archivo: ' + result.id;
+            status.textContent = '¡Subido exitosamente a la carpeta! ID del archivo: ' + result.id;
             preview.style.display = 'none';
             fileInput.value = '';
         } else {
@@ -130,7 +128,3 @@ async function uploadFile(file, fileName) {
         status.textContent = 'Error en subida: ' + error.message;
     }
 }
-
-
-
-
