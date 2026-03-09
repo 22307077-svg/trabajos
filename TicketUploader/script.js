@@ -1,15 +1,14 @@
 // Configuración de Google API
-const CLIENT_ID = '226515355841-dtqhafbqdsg51f6st993i30k3iepa49o.apps.googleusercontent.com'; // Reemplaza con tu client_id de Google Cloud
-const API_KEY = 'AIzaSyANr0IcvAguJcyhRzc2lPaU2wTTxZ8WXBs'; // Reemplaza con tu API key
+const CLIENT_ID = '226515355841-dtqhafbqdsg51f6st993i30k3iepa49o.apps.googleusercontent.com';
+const API_KEY = 'AIzaSyANr0IcvAguJcyhRzc2lPaU2wTTxZ8WXBs';
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
-const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Solo para subir archivos
-
+const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Permiso mínimo para crear archivos
 
 let tokenClient;
 let gapiInited = false;
 let gisInited = false;
 
-// Inicializar Google API
+// Inicializar Google API client
 function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
 }
@@ -23,12 +22,12 @@ async function initializeGapiClient() {
     maybeEnableButtons();
 }
 
-// Inicializar Google Identity Services (para OAuth)
+// Inicializar Google Identity Services (OAuth)
 function gisLoaded() {
     tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
-        callback: '', // Definido dinámicamente
+        callback: '', // Se define dinámicamente más abajo
     });
     gisInited = true;
     maybeEnableButtons();
@@ -36,11 +35,12 @@ function gisLoaded() {
 
 function maybeEnableButtons() {
     if (gapiInited && gisInited) {
-        document.getElementById('uploadButton').disabled = false;
+        const uploadBtn = document.getElementById('uploadButton');
+        if (uploadBtn) uploadBtn.disabled = false;
     }
 }
 
-// Cargar librerías de Google
+// Cargar las librerías de Google automáticamente
 const script1 = document.createElement('script');
 script1.src = 'https://accounts.google.com/gsi/client';
 script1.async = true;
@@ -55,12 +55,13 @@ script2.defer = true;
 script2.onload = gapiLoaded;
 document.body.appendChild(script2);
 
-// Lógica de la app
+// Elementos del DOM
 const fileInput = document.getElementById('fileInput');
 const preview = document.getElementById('preview');
 const uploadButton = document.getElementById('uploadButton');
 const status = document.getElementById('status');
 
+// Mostrar vista previa cuando se selecciona/toma foto
 fileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -69,62 +70,88 @@ fileInput.addEventListener('change', (e) => {
     }
 });
 
+// Evento al presionar "Subir"
 uploadButton.addEventListener('click', () => {
     const file = fileInput.files[0];
     if (!file) {
-        status.textContent = 'Selecciona o toma una foto primero.';
+        status.textContent = 'Primero selecciona o toma una foto.';
+        status.style.color = '#ff6b6b';
         return;
     }
 
-    // Capturar fecha y hora exacta
+    // Generar nombre con fecha y hora exacta
     const now = new Date();
-    const formattedDate = now.toISOString().replace(/:/g, '-').slice(0, 19); // Ej: 2026-03-07T14-30-45 -> 2026-03-07-14-30-45
-    const fileName = `Ticket_${formattedDate}.${file.name.split('.').pop()}`;
+    const formattedDate = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const extension = file.name.split('.').pop() || 'jpg';
+    const fileName = `Ticket_${formattedDate}.${extension}`;
 
-    // Autenticar y subir
+    status.textContent = 'Autenticando...';
+    status.style.color = '#ffd93d';
+
+    // Solicitar token si no existe
     if (gapi.client.getToken() === null) {
-        tokenClient.requestAccessToken({prompt: 'consent'});
+        tokenClient.requestAccessToken({ prompt: 'consent' });
     } else {
-        tokenClient.requestAccessToken({prompt: ''});
+        tokenClient.requestAccessToken({ prompt: '' });
     }
 
+    // Callback después de obtener el token
     tokenClient.callback = async (resp) => {
-        if (resp.error !== undefined) {
-            status.textContent = 'Error en autenticación: ' + resp.error;
+        if (resp.error) {
+            status.textContent = 'Error de autenticación: ' + resp.error;
+            status.style.color = '#ff6b6b';
+            console.error('OAuth error:', resp);
             return;
         }
+
         await uploadFile(file, fileName);
     };
 });
 
+// Función principal de subida a Google Drive (raíz de Mi unidad)
 async function uploadFile(file, fileName) {
-    status.textContent = 'Subiendo...';
+    status.textContent = 'Subiendo a Google Drive...';
+    status.style.color = '#4ecdc4';
 
     const metadata = {
         name: fileName,
         mimeType: file.type,
-        parents: [CARPETA_ID]  // ¡Ajuste clave! Sube a la carpeta específica
+        // parents: [...]  ← Comentado intencionalmente para subir a la raíz
     };
 
     const form = new FormData();
-    form.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
+    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
     form.append('file', file);
 
     try {
-        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-            method: 'POST',
-            headers: new Headers({'Authorization': 'Bearer ' + gapi.client.getToken().access_token}),
-            body: form,
-        });
+        console.log('Iniciando subida del archivo:', fileName); // Para depuración
+
+        const response = await fetch(
+            'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true',
+            {
+                method: 'POST',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + gapi.client.getToken().access_token
+                }),
+                body: form,
+            }
+        );
+
         const result = await response.json();
+
         if (result.id) {
-            status.textContent = '¡Subido exitosamente a la carpeta! ID del archivo: ' + result.id;
+            status.textContent = '¡Subido exitosamente! Archivo guardado en la raíz de tu Google Drive.';
+            status.style.color = '#6bc950';
             preview.style.display = 'none';
-            fileInput.value = '';
+            fileInput.value = ''; // Limpia el input para la siguiente foto
         } else {
-            status.textContent = 'Error: ' + JSON.stringify(result);
+            status.textContent = 'Error en la respuesta de Drive: ' + JSON.stringify(result);
+            status.style.color = '#ff6b6b';
+            console.error('Respuesta de Drive:', result);
         }
     } catch (error) {
-        status.textContent = 'Error en subida: ' + error.message;
+        status.textContent = 'Error durante la subida: ' + error.message;
+        status.style.color = '#ff6b6b';
+        console.error('Error completo:', error);
     }
 }
