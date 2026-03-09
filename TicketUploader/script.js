@@ -4,7 +4,7 @@ const API_KEY = 'AIzaSyANr0IcvAguJcyhRzc2lPaU2wTTxZ8WXBs'; // Reemplaza con tu A
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file'; // Solo para subir archivos
 
-const CARPETA_ID = '1MbVs8n5xUrZvweKYnFgGzP9hzWVzma3g';
+const CARPETA_ID = '1u3ml9eHm3sxDK4WENP6E8bL8eZyqi5q6';
 
 
 let tokenClient;
@@ -130,5 +130,6 @@ async function uploadFile(file, fileName) {
         status.textContent = 'Error en subida: ' + error.message;
     }
 }
+
 
 
