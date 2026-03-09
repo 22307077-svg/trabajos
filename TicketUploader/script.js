@@ -7,7 +7,7 @@
 // 3. Copia la URL que termina en /exec y pégala en SCRIPT_URL abajo
 // 4. Sube este archivo a tu GitHub Pages y prueba
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4ZmQNQrASNgwPZoX83mx9gqSG5a9NPSgZQ51na9s-XKcgastrTWUry3b1DPvlZ5lo/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzraX5rAq5S4ULH8490z7T_Tth6zG_H7AKvyQ1rNdLrdNFiMG2_aNcOkkwva4PUh-5HTQ/exec';
 // ↑↑↑ REEMPLAZA ESTA LÍNEA CON TU URL REAL DEL APPS SCRIPT (la que obtuviste al desplegar)
 
 const fileInput = document.getElementById('fileInput');
@@ -89,3 +89,4 @@ uploadButton.addEventListener('click', async () => {
 
     reader.readAsDataURL(file);
 });
+
