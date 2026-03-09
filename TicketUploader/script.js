@@ -1,6 +1,6 @@
 // script.js - Sube directamente al Google Apps Script (guarda en TU Drive)
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyA4zCGt-MdVgQmIeAPQRZoaWQDoixXLQTE5bceDv7FPyzOqNegfQTJHJIdxdOuquS8/exec';  // ← Pega aquí la URL de tu Web App del Paso 3
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw1XiKnfXrLNKRTOBYDJ4xWcTA2J9smNJgqS7y_VmXgcYw9vN8hBsgb7Li-KKyG_vI9/exec';  // ← Pega aquí la URL de tu Web App del Paso 3
 
 const fileInput = document.getElementById('fileInput');
 const preview = document.getElementById('preview');
@@ -71,3 +71,4 @@ uploadButton.addEventListener('click', async () => {
 
     reader.readAsDataURL(file);
 });
+
